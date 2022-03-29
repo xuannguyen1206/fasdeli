@@ -40,8 +40,27 @@
 .display .structure{
   width: 40%;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
+.display .structure p{
+  margin: 0.5rem 0;
+}
+.display .structure button{
+  margin: 0.5rem 0;
+}
+
 .config{
   grid-area: 3/2/4/3;
   background-color: pink;
+}
+.config .wrapper{
+  padding-left: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  height: 50%;
 }

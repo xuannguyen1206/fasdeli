@@ -10,9 +10,13 @@
   },
   "dependencies": {
     "next": "12.1.0",
+    "next-redux-wrapper": "^7.0.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-draggable": "^4.4.4"
+    "react-draggable": "^4.4.4",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2",
+    "redux-thunk": "^2.4.1"
   },
   "devDependencies": {
     "@types/node": "17.0.22",
