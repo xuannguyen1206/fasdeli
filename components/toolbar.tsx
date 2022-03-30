@@ -3,17 +3,17 @@ import styles from '../styles/toolbar.module.css'
 
 type prop = {
   save:()=>void,
+  undo:()=>void,
+  redo:()=>void,
 }
 
-function Toolbar({save}:prop) {
+function Toolbar({undo,save,redo}:prop) {
   return ( 
     <nav className={styles.container} >
       <button onClick={save}>Save</button>
-      <button>Undo</button>
-      <button>Redo</button>
-      <button>Export</button>
-      <button>Import</button>
-       <button><Link href='./Customer'><a target='_blank'>View</a></Link></button>
+      <button onClick={undo}>Undo</button>
+      <button onClick={redo}>Redo</button>
+      <button><Link href='./Customer'><a target='_blank'>View</a></Link></button>
     </nav>
   );
 }

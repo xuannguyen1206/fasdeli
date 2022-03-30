@@ -17,6 +17,7 @@
 }
 .container button a{
   text-decoration: none;
+  color: inherit;
 }
 .container button a:visited{
   color: inherit;

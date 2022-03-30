@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Toolbar from '../components/toolbar'
 import styles from '../styles/Home.module.css'
 import { useEffect, useRef, useState } from 'react'
+import useKeepTrack from '../hooks/useKeepTrack'
 
 type Paragraph = {
   index:number,
@@ -20,7 +21,7 @@ export enum ElementType {
   ElementButton = "ElementButton",
 }
 
-export type customerDisplay = Array< Paragraph & Button >
+export type customerDisplay = Array< Paragraph & Button>
 
 
 const Home: NextPage = () => {
@@ -29,9 +30,13 @@ const Home: NextPage = () => {
   const [mousePos,setMousePos] = useState({x:0,y:0});
   const [customerDisplay,setCustomerDisplay] = useState<customerDisplay>([]);
   const configElementIndex = useRef(-1);
-  const textFields = useRef<HTMLInputElement>(null)
-  const msgFields = useRef<HTMLInputElement>(null)
-  
+  const textFields = useRef<HTMLInputElement>(null);
+  const msgFields = useRef<HTMLInputElement>(null);
+
+
+
+  const { undo,redo } = useKeepTrack(customerDisplay,setCustomerDisplay);
+
   function dragStart(e: any){  /* inform what element is being dragged */
     if((e.target as HTMLDivElement ).childNodes[1].textContent === 'Paragraph') 
     setDraggingElement(ElementType.ElementParagraph);
@@ -80,19 +85,16 @@ const Home: NextPage = () => {
   
   function turnOnConfig(index:number /* index of element in display board */){
     if(typeof index == 'undefined') return; /* if user click on void space, return */
-    // if(inputFields.current?.value){
-    //   inputFields.current.value = '';
-    // }
-    if(textFields.current?.value) textFields.current.value = customerDisplay[index].text;
-    if(msgFields.current?.value) msgFields.current.value = customerDisplay[index]?.msg;
-    configElementIndex.current = index;
+    
+    if(textFields.current?.value !== undefined) textFields.current.value = customerDisplay[index].text;
+    if(msgFields.current?.value !== undefined) msgFields.current.value = customerDisplay[index]?.msg;
+    configElementIndex.current = Number(index);
     if(customerDisplay[index].type === ElementType.ElementParagraph){
       setConfigOn(1)
     } else {
       setConfigOn(2);
     }
-    console.log(index);
-    // set customize menu
+   
   }
 
   function configElementText(e:any){
@@ -140,15 +142,19 @@ const Home: NextPage = () => {
     }
   } 
 
+  useEffect(()=> { /* constanly update input fields as user undo */
+    if(customerDisplay[configElementIndex.current] !== undefined){
+      (textFields.current as HTMLInputElement).value = customerDisplay[configElementIndex.current].text;
+      (msgFields.current as HTMLInputElement).value = customerDisplay[configElementIndex.current]?.msg;
+    } else {
+      setConfigOn(0)
+    }
+  },[customerDisplay])
   /************************************************   FUNCTIONS FOR TOOLBAR  ******************************************************/ 
   function save(){
     localStorage.customerDisplay = JSON.stringify(customerDisplay)
     console.log(JSON.parse(localStorage.customerDisplay));
   }
-
-  // useEffect(()=> {
-  //   console.log(customerDisplay);
-  // },[customerDisplay])
   return (
     <div className={styles.container}>
       <Head>
@@ -157,7 +163,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <Toolbar save={save}/>
+        <Toolbar undo={undo} redo={redo} save={save}/>
 
         <section className={styles.components} >
           <div className={styles.unit} onDragStart={dragStart} onDragEnd={()=>setDraggingElement('')} draggable={true}>
