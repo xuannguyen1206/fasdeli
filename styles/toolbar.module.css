@@ -13,4 +13,14 @@
   color: white;
   font-weight: 500;
   border: none;
+  cursor: pointer;
+}
+.container button a{
+  text-decoration: none;
+}
+.container button a:visited{
+  color: inherit;
+}
+.container button:hover{
+  background-color: #b92f0d;
 }

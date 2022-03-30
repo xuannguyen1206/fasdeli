@@ -1,11 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import Toolbar from '../components/toolbar'
 import styles from '../styles/Home.module.css'
-import { DragEventHandler, EventHandler, MouseEventHandler, useEffect, useRef, useState } from 'react'
-import { type } from 'os'
-import { text } from 'stream/consumers'
+import { useEffect, useRef, useState } from 'react'
 
 type Paragraph = {
   index:number,
@@ -18,12 +15,12 @@ type Button = {
   text: string,
   msg: string
 }
-enum ElementType {
+export enum ElementType {
   ElementParagraph = "ElementParagraph",
   ElementButton = "ElementButton",
 }
 
-type customerDisplay = Array< Paragraph & Button >
+export type customerDisplay = Array< Paragraph & Button >
 
 
 const Home: NextPage = () => {
@@ -143,9 +140,15 @@ const Home: NextPage = () => {
     }
   } 
 
-  useEffect(()=> {
-    console.log(customerDisplay);
-  },[customerDisplay])
+  /************************************************   FUNCTIONS FOR TOOLBAR  ******************************************************/ 
+  function save(){
+    localStorage.customerDisplay = JSON.stringify(customerDisplay)
+    console.log(JSON.parse(localStorage.customerDisplay));
+  }
+
+  // useEffect(()=> {
+  //   console.log(customerDisplay);
+  // },[customerDisplay])
   return (
     <div className={styles.container}>
       <Head>
@@ -154,7 +157,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <Toolbar/>
+        <Toolbar save={save}/>
 
         <section className={styles.components} >
           <div className={styles.unit} onDragStart={dragStart} onDragEnd={()=>setDraggingElement('')} draggable={true}>
@@ -174,8 +177,8 @@ const Home: NextPage = () => {
             <span>Instances:{customerDisplay.length}</span>
             <span>Config:	&#123; &#8220;id: &#8220;{ configElementIndex.current}&#8220;
               ,&#8220;component&#8220;:&#8220;{customerDisplay[configElementIndex.current] ? customerDisplay[configElementIndex.current].type : ""},
-              &#8220;props&#8220;:&#123;&#8220;text&#8220;: {customerDisplay[configElementIndex.current].text ? customerDisplay[configElementIndex.current].text : ''}&#59;
-              { customerDisplay[configElementIndex.current].msg ? `${String.fromCharCode(34)}message${String.fromCharCode(34)}:${String.fromCharCode(34)}${customerDisplay[configElementIndex.current].msg}`:''}
+              &#8220;props&#8220;:&#123;&#8220;text&#8220;: {customerDisplay[configElementIndex.current]?.text !== undefined ? customerDisplay[configElementIndex.current].text : ''}&#59;
+              { customerDisplay[configElementIndex.current]?.msg !== undefined ? `${String.fromCharCode(34)}message${String.fromCharCode(34)}:${String.fromCharCode(34)}${customerDisplay[configElementIndex.current].msg}`:''}
               &#125;&#125;
               
             </span>
